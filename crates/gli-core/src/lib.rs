@@ -5,6 +5,18 @@
 
 #![forbid(unsafe_code)]
 
+/// ASCII logo: the "gli" wordmark over a staggered brick wall with one accent
+/// brick ("gli" is Ewe for wall). The `######` marks the accent brick, which
+/// the TUI colors. Shown in CLI help and the TUI header.
+pub const BANNER: &str = r"       _ _
+  __ _| (_)
+ / _` | | |
+| (_| | | |
+ \__, |_|_|
+ |___/
+(==)(######)(==)
+ (====)(====)";
+
 mod catalog;
 mod config;
 mod context;

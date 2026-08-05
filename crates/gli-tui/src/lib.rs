@@ -24,6 +24,65 @@ use app::{Action, App, Msg, Row};
 
 type Term = Terminal<CrosstermBackend<Stdout>>;
 
+/// Render one dashboard frame to plain text with sample data, for docs and
+/// screenshots. Colors are not represented.
+pub fn preview(width: u16, height: u16) -> String {
+    use gli_core::State;
+    use ratatui::backend::TestBackend;
+    use ratatui::layout::Position;
+
+    let sample = |name: &str, summary: &str, state: State| Row {
+        name: name.to_string(),
+        summary: summary.to_string(),
+        state,
+        detail: String::new(),
+    };
+    let mut app = App {
+        rows: vec![
+            sample(
+                "ssh",
+                "Harden sshd: custom port, no root/password login",
+                State::Compliant,
+            ),
+            sample(
+                "firewall",
+                "nftables default-deny, allow-list",
+                State::Drift,
+            ),
+            sample(
+                "users",
+                "Create users, grant sudo, install SSH keys",
+                State::Compliant,
+            ),
+            sample(
+                "docker",
+                "Install Docker, enable, add users to group",
+                State::NotApplicable,
+            ),
+            sample("caddy", "Reverse proxy with automatic HTTPS", State::Drift),
+        ],
+        ..App::default()
+    };
+    app.marked.insert("firewall".to_string());
+    app.push_log("scanning modules...");
+    app.push_log("ssh: 3 change(s) applied");
+
+    let mut term = Terminal::new(TestBackend::new(width, height)).unwrap();
+    term.draw(|f| ui::draw(f, &app)).unwrap();
+
+    let buf = term.backend().buffer();
+    let mut out = String::new();
+    for y in 0..height {
+        for x in 0..width {
+            if let Some(cell) = buf.cell(Position::new(x, y)) {
+                out.push_str(cell.symbol());
+            }
+        }
+        out.push('\n');
+    }
+    out
+}
+
 /// Run the dashboard against the local host until the operator quits.
 pub async fn run(config: Config) -> io::Result<()> {
     let ctx = Context::system(config);
