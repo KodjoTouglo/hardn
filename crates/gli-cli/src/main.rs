@@ -2,7 +2,7 @@
 
 use std::path::PathBuf;
 
-use clap::{Parser, Subcommand};
+use clap::{CommandFactory, FromArgMatches, Parser, Subcommand};
 use color_eyre::eyre::{bail, eyre, Context as _, Result};
 use gli_agent::{default_known_hosts, Auth, ConnectOpts, HostKeyPolicy};
 use gli_core::{Config, Context, Inventory, ModuleCatalog, Server, State};
@@ -260,7 +260,11 @@ async fn main() -> Result<()> {
         .with_target(false)
         .init();
 
-    let cli = Cli::parse();
+    // Show the ASCII wordmark above the long help (`--help`, not `-h`).
+    let matches = Cli::command()
+        .before_long_help(gli_core::BANNER)
+        .get_matches();
+    let cli = Cli::from_arg_matches(&matches).unwrap_or_else(|e| e.exit());
     match &cli.command {
         Command::Init { force } => cmd_init(&cli.config, *force),
         Command::Plan => cmd_plan(&cli).await,

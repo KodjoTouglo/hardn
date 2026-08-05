@@ -5,6 +5,14 @@
 
 #![forbid(unsafe_code)]
 
+/// ASCII wordmark, shown in CLI help and the TUI header.
+pub const BANNER: &str = r"       _ _
+  __ _| (_)
+ / _` | | |
+| (_| | | |
+ \__, |_|_|
+ |___/     ";
+
 mod catalog;
 mod config;
 mod context;

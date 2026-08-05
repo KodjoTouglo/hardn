@@ -13,7 +13,7 @@ pub fn draw(f: &mut Frame, app: &App) {
     let chunks = Layout::default()
         .direction(Direction::Vertical)
         .constraints([
-            Constraint::Length(3),
+            Constraint::Length(8),
             Constraint::Min(6),
             Constraint::Length(8),
             Constraint::Length(1),
@@ -33,9 +33,11 @@ pub fn draw(f: &mut Frame, app: &App) {
 fn header(f: &mut Frame, app: &App, area: Rect) {
     let (ok, total) = app.score();
     let pct = (ok * 100).checked_div(total).unwrap_or(0);
-    let busy = if app.busy { "  [working...]" } else { "" };
-    let text = format!("gli   security score {pct}% ({ok}/{total} compliant){busy}");
-    let p = Paragraph::new(text).block(Block::default().borders(Borders::ALL).title("gli"));
+    let busy = if app.busy { "  working..." } else { "" };
+    let title = format!(" gli   security {pct}% ({ok}/{total} compliant){busy} ");
+    let p = Paragraph::new(gli_core::BANNER)
+        .style(Style::default().fg(Color::Cyan))
+        .block(Block::default().borders(Borders::ALL).title(title));
     f.render_widget(p, area);
 }
 
