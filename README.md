@@ -193,6 +193,18 @@ a mock runner.
 - Homebrew, winget, npm, and PyPI packages
 - Compliance reports (CIS, ANSSI)
 
+## Assets
+
+Logo and icon variations live in [assets/](assets/):
+
+| File | Use |
+|---|---|
+| `logo.svg` | Full logo (wordmark + mark) on light backgrounds |
+| `logo-white.svg` | Full logo for dark backgrounds |
+| `icon.svg` | Standalone mark on light backgrounds |
+| `icon-white.svg` | Standalone mark for dark backgrounds |
+| `favico.ico` | Favicon |
+
 ## Development
 
 ```sh
