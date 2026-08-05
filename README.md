@@ -1,6 +1,11 @@
-# gli
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/logo-white.svg">
+    <img src="assets/logo.svg" alt="gli" width="320">
+  </picture>
+</p>
 
-Configure, secure, and provision a Linux VPS from one declarative file.
+<p align="center">Configure, secure, and provision a Linux VPS from one declarative file.</p>
 
 gli is a single static Rust binary that hardens and sets up a server from a
 declarative `gli.toml`. Every change is idempotent, previewed before it
