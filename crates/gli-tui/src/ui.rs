@@ -13,9 +13,9 @@ pub fn draw(f: &mut Frame, app: &App) {
     let chunks = Layout::default()
         .direction(Direction::Vertical)
         .constraints([
-            Constraint::Length(8),
+            Constraint::Length(10),
             Constraint::Min(6),
-            Constraint::Length(8),
+            Constraint::Length(6),
             Constraint::Length(1),
         ])
         .split(f.area());
@@ -35,10 +35,23 @@ fn header(f: &mut Frame, app: &App, area: Rect) {
     let pct = (ok * 100).checked_div(total).unwrap_or(0);
     let busy = if app.busy { "  working..." } else { "" };
     let title = format!(" gli   security {pct}% ({ok}/{total} compliant){busy} ");
-    let p = Paragraph::new(gli_core::BANNER)
-        .style(Style::default().fg(Color::Cyan))
-        .block(Block::default().borders(Borders::ALL).title(title));
+    let banner: Vec<Line> = gli_core::BANNER.lines().map(banner_line).collect();
+    let p = Paragraph::new(banner).block(Block::default().borders(Borders::ALL).title(title));
     f.render_widget(p, area);
+}
+
+/// Style a banner line: the accent brick blue, the rest cyan.
+fn banner_line(line: &str) -> Line<'static> {
+    const ACCENT: &str = "######";
+    let cyan = Style::default().fg(Color::Cyan);
+    match line.find(ACCENT) {
+        Some(i) => Line::from(vec![
+            Span::styled(line[..i].to_string(), cyan),
+            Span::styled(ACCENT.to_string(), Style::default().fg(Color::Blue)),
+            Span::styled(line[i + ACCENT.len()..].to_string(), cyan),
+        ]),
+        None => Line::from(Span::styled(line.to_string(), cyan)),
+    }
 }
 
 fn modules(f: &mut Frame, app: &App, area: Rect) {
